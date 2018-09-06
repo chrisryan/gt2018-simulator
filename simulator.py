@@ -1,4 +1,6 @@
 from Tkinter import *
+from random import randint
+from datetime import datetime
 
 main = Tk()
 
@@ -68,4 +70,30 @@ row3Text.set("63")
 timeText.set("3:05 PM")
 
 
+# row0Graph 712x178
+items = []
+lastX = 0;
+lastY = 89;
+def updateSimulation():
+    global lastX
+    global lastY
+    nextX = lastX + 10
+    if nextX > 712:
+        nextX = 10
+        lastX = 0
+    nextY = randint(20, 158)
+    items.append(row0Graph.create_line(lastX, lastY, nextX, nextY, fill="red"))
+    lastX = nextX
+    lastY = nextY
+
+    row0Text.set(lastY)
+
+    timeText.set(datetime.now().time())
+
+    if len(items) > 65:
+        row0Graph.delete(items.pop(0))
+
+    main.after(200, updateSimulation)
+
+updateSimulation()
 main.mainloop()
