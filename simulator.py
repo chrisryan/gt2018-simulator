@@ -1,6 +1,7 @@
 from Tkinter import *
 from random import randint
 from datetime import datetime
+import time
 
 main = Tk()
 
@@ -69,12 +70,25 @@ row2Text.set("12")
 row3Text.set("63")
 timeText.set("3:05 PM")
 
+def getCurrentMilli():
+    return int(round(time.time() * 1000))
+
+def heartRateToMilli(heartRate):
+    return 60000 / heartRate
 
 # row0Graph 712x178
 items = []
 lastX = 0;
 lastY = 89;
+
+# row1Graph 712x178
+items2 = []
+lastBeat = getCurrentMilli()
+heartRate = 48;
+timeBetweenBeats = heartRateToMilli(heartRate)
+
 def updateSimulation():
+    # Random Graph
     global lastX
     global lastY
     nextX = lastX + 10
@@ -88,11 +102,32 @@ def updateSimulation():
 
     row0Text.set(lastY)
 
-    timeText.set(datetime.now().time())
-
     if len(items) > 65:
         row0Graph.delete(items.pop(0))
 
+    # heart rate
+    global lastBeat
+    global heartRate
+    currentMilli = getCurrentMilli()
+    deltaTime = currentMilli - lastBeat
+    if deltaTime > timeBetweenBeats:
+        # do heart beat
+        items2.append(row1Graph.create_line(lastX-10, 89, lastX-7, 89-60, fill="red"))
+        items2.append(row1Graph.create_line(lastX-7, 89-60, lastX-3, 89+20, fill="red"))
+        items2.append(row1Graph.create_line(lastX-3, 89+20, lastX, 89, fill="red"))
+        lastBeat = currentMilli
+    else:
+        items2.append(row1Graph.create_line(lastX-10, 89, lastX, 89, fill="red"))
+
+    while len(items2) > 85:
+        row1Graph.delete(items2.pop(0))
+
+    row1Text.set(heartRate)
+
+    # Time box
+    timeText.set(datetime.now().time())
+
+    # reset tick
     main.after(200, updateSimulation)
 
 updateSimulation()
