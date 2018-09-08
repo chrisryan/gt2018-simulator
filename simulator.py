@@ -36,6 +36,37 @@ class GraphRandom(GraphRow):
         if len(self.items) > 65:
             self.graph.delete(self.items.pop(0))
 
+class GraphHeartRate(GraphRow):
+    lastX = 0
+    baseY = 60
+    items = []
+    def __init__(parentWidget, rowNum, heartRate):
+        GraphRow.__init__(self, parentWidget, rowNum)
+        self.setHeartRate(heartRate)
+        self.lastBeat = getCurrentMilli()
+
+    def update(self):
+        self.lastX = self.lastX + 10
+
+        currentMilli = getCurrentMilli()
+        deltaTime = currentMilli - lastBeat
+        if deltaTime > self.timeBetweenBeats:
+            # do heart beat
+            items2.append(self.graph.create_line(self.lastX-10, self.baseY, self.lastX-7, self.baseY-60, fill="red"))
+            items2.append(self.graph.create_line(self.lastX-7, self.baseY-60, self.lastX-3, self.baseY+20, fill="red"))
+            items2.append(self.graph.create_line(self.lastX-3, self.baseY+20, self.lastX, self.baseY, fill="red"))
+            self.lastBeat = currentMilli
+        else:
+            items2.append(self.graph.create_line(self.lastX-10, 89, self.lastX, 89, fill="red"))
+
+        while len(items2) > 85:
+            self.graph.delete(items2.pop(0))
+
+    def setHeartRate(heartRate):
+        self.heartRate = heartRate
+        self.value.set(heartRate)
+        self.timeBetweenBeats = heartRateToMilli(heartRate)
+
 
 main = Tk()
 
