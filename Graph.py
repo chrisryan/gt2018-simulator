@@ -1,10 +1,10 @@
 from Tkinter import *
 from random import randint
-import time
+from time import time
 
 # help functions
 def getCurrentMilli():
-    return int(round(time.time() * 1000))
+    return int(round(time() * 1000))
 
 # Classes
 class GraphRow:
