@@ -58,14 +58,17 @@ class GraphHeartRate(GraphRow):
         deltaTime = currentMilli - self.lastBeat
         if deltaTime > self.timeBetweenBeats:
             # do heart beat
-            self.items.append(self.graph.create_line(self.lastX-10, self.baseY, self.lastX-7, self.baseY-60, fill="red"))
-            self.items.append(self.graph.create_line(self.lastX-7, self.baseY-60, self.lastX-3, self.baseY+20, fill="red"))
-            self.items.append(self.graph.create_line(self.lastX-3, self.baseY+20, self.lastX, self.baseY, fill="red"))
+            xy = [
+                self.lastX-10, self.baseY, self.lastX-7, self.baseY-60,
+                self.lastX-7, self.baseY-60, self.lastX-3, self.baseY+20,
+                self.lastX-3, self.baseY+20, self.lastX, self.baseY
+            ]
+            self.items.append(self.graph.create_line(xy, fill="red"))
             self.lastBeat = currentMilli
         else:
             self.items.append(self.graph.create_line(self.lastX-10, self.baseY, self.lastX, self.baseY, fill="red"))
 
-        while len(self.items) > 85:
+        while len(self.items) > 65:
             self.graph.delete(self.items.pop(0))
 
     def setHeartRate(self, heartRate):
