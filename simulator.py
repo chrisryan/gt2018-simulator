@@ -3,6 +3,10 @@ from random import randint
 from datetime import datetime
 import time
 
+# help functions
+def getCurrentMilli():
+    return int(round(time.time() * 1000))
+
 # Classes
 class GraphRow:
     graphWidth = 712
@@ -38,35 +42,39 @@ class GraphRandom(GraphRow):
 
 class GraphHeartRate(GraphRow):
     lastX = 0
-    baseY = 60
+    baseY = 100
     items = []
-    def __init__(parentWidget, rowNum, heartRate):
+    def __init__(self, parentWidget, rowNum, heartRate):
         GraphRow.__init__(self, parentWidget, rowNum)
         self.setHeartRate(heartRate)
         self.lastBeat = getCurrentMilli()
 
     def update(self):
         self.lastX = self.lastX + 10
+        if self.lastX > self.graphWidth:
+            self.lastX = 10
 
         currentMilli = getCurrentMilli()
-        deltaTime = currentMilli - lastBeat
+        deltaTime = currentMilli - self.lastBeat
         if deltaTime > self.timeBetweenBeats:
             # do heart beat
-            items2.append(self.graph.create_line(self.lastX-10, self.baseY, self.lastX-7, self.baseY-60, fill="red"))
-            items2.append(self.graph.create_line(self.lastX-7, self.baseY-60, self.lastX-3, self.baseY+20, fill="red"))
-            items2.append(self.graph.create_line(self.lastX-3, self.baseY+20, self.lastX, self.baseY, fill="red"))
+            self.items.append(self.graph.create_line(self.lastX-10, self.baseY, self.lastX-7, self.baseY-60, fill="red"))
+            self.items.append(self.graph.create_line(self.lastX-7, self.baseY-60, self.lastX-3, self.baseY+20, fill="red"))
+            self.items.append(self.graph.create_line(self.lastX-3, self.baseY+20, self.lastX, self.baseY, fill="red"))
             self.lastBeat = currentMilli
         else:
-            items2.append(self.graph.create_line(self.lastX-10, 89, self.lastX, 89, fill="red"))
+            self.items.append(self.graph.create_line(self.lastX-10, self.baseY, self.lastX, self.baseY, fill="red"))
 
-        while len(items2) > 85:
-            self.graph.delete(items2.pop(0))
+        while len(self.items) > 85:
+            self.graph.delete(self.items.pop(0))
 
-    def setHeartRate(heartRate):
+    def setHeartRate(self, heartRate):
         self.heartRate = heartRate
         self.value.set(heartRate)
-        self.timeBetweenBeats = heartRateToMilli(heartRate)
+        self.timeBetweenBeats = self.heartRateToMilli(heartRate)
 
+    def heartRateToMilli(self, heartRate):
+        return 60000 / heartRate
 
 main = Tk()
 
@@ -86,12 +94,7 @@ statsCollection.pack(side=LEFT)
 randomGraph = GraphRandom(statsCollection, 0)
 
 # Row 1
-row1Text = StringVar()
-row1TextLabel = Label(statsCollection, textvariable=row1Text, relief=RAISED, bd=10, width=4, height=2, bg="blue", font=("Arial Bold", 50))
-row1TextLabel.grid(row=1, column=0);
-
-row1Graph = Canvas(statsCollection, relief=RAISED, width=712, height=178, bg="black")
-row1Graph.grid(row=1, column=1);
+heartRateGraph = GraphHeartRate(statsCollection, 1, 48)
 
 # Row 2
 row2Text = StringVar()
@@ -127,55 +130,17 @@ timeLabel.pack()
 
 
 titleText.set("SUBJECT: SMITH, JOHN")
-row1Text.set("99")
 row2Text.set("12")
 row3Text.set("63")
 timeText.set("3:05 PM")
 
-def getCurrentMilli():
-    return int(round(time.time() * 1000))
-
-def heartRateToMilli(heartRate):
-    return 60000 / heartRate
-
-# row0Graph 712x178
-lastX = 0;
-
-# row1Graph 712x178
-items2 = []
-lastBeat = getCurrentMilli()
-heartRate = 48;
-timeBetweenBeats = heartRateToMilli(heartRate)
 
 def updateSimulation():
-    global lastX
-    nextX = lastX + 10
-    if nextX > 712:
-        nextX = 10
-        lastX = 0
-    lastX = nextX
-
     # random
     randomGraph.update()
 
     # heart rate
-    global lastBeat
-    global heartRate
-    currentMilli = getCurrentMilli()
-    deltaTime = currentMilli - lastBeat
-    if deltaTime > timeBetweenBeats:
-        # do heart beat
-        items2.append(row1Graph.create_line(lastX-10, 89, lastX-7, 89-60, fill="red"))
-        items2.append(row1Graph.create_line(lastX-7, 89-60, lastX-3, 89+20, fill="red"))
-        items2.append(row1Graph.create_line(lastX-3, 89+20, lastX, 89, fill="red"))
-        lastBeat = currentMilli
-    else:
-        items2.append(row1Graph.create_line(lastX-10, 89, lastX, 89, fill="red"))
-
-    while len(items2) > 85:
-        row1Graph.delete(items2.pop(0))
-
-    row1Text.set(heartRate)
+    heartRateGraph.update()
 
     # Time box
     timeText.set(datetime.now().time())
