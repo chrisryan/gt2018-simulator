@@ -10,7 +10,7 @@ class GraphRow:
 
     def __init__(self, parentWidget, rowNum):
         self.value = StringVar()
-        self.label = Label(parentWidget, textvariable=self.value, relief=RAISED, bd=10, width=4, height=2, bg="black", font=("Arial Bold", 50))
+        self.label = Label(parentWidget, textvariable=self.value, relief=RAISED, bd=10, width=4, height=2, fg="yellow", bg="black", font=("Arial Bold", 50))
         self.graph = Canvas(parentWidget, relief=RAISED, width=self.graphWidth, height=self.graphHeight, bg="black")
 
         self.label.grid(row=rowNum, column=0)
@@ -51,14 +51,10 @@ frame.pack(side=TOP)
 statsCollection = Frame(frame)
 statsCollection.pack(side=LEFT)
 
-#  Row 1
-row0Text = StringVar()
-row0TextLabel = Label(statsCollection, textvariable=row0Text, relief=RAISED, bd=10, width=4, height=2, bg="yellow", font=("Arial Bold", 50))
-row0TextLabel.grid(row=0, column=0);
+#  Row 0
+randomGraph = GraphRandom(statsCollection, 0)
 
-row0Graph = Canvas(statsCollection, relief=RAISED, width=712, height=178, bg="black")
-row0Graph.grid(row=0, column=1);
-
+# Row 1
 row1Text = StringVar()
 row1TextLabel = Label(statsCollection, textvariable=row1Text, relief=RAISED, bd=10, width=4, height=2, bg="blue", font=("Arial Bold", 50))
 row1TextLabel.grid(row=1, column=0);
@@ -66,6 +62,7 @@ row1TextLabel.grid(row=1, column=0);
 row1Graph = Canvas(statsCollection, relief=RAISED, width=712, height=178, bg="black")
 row1Graph.grid(row=1, column=1);
 
+# Row 2
 row2Text = StringVar()
 row2TextLabel = Label(statsCollection, textvariable=row2Text, relief=RAISED, bd=10, width=4, height=2, bg="red", font=("Arial Bold", 50))
 row2TextLabel.grid(row=2, column=0);
@@ -73,6 +70,7 @@ row2TextLabel.grid(row=2, column=0);
 row2Graph = Canvas(statsCollection, relief=RAISED, width=712, height=178, bg="black")
 row2Graph.grid(row=2, column=1);
 
+# Row 3
 row3Text = StringVar()
 row3TextLabel = Label(statsCollection, textvariable=row3Text, relief=RAISED, bd=10, width=4, height=2, bg="pink", font=("Arial Bold", 50))
 row3TextLabel.grid(row=3, column=0);
@@ -98,7 +96,6 @@ timeLabel.pack()
 
 
 titleText.set("SUBJECT: SMITH, JOHN")
-row0Text.set("54")
 row1Text.set("99")
 row2Text.set("12")
 row3Text.set("63")
@@ -111,9 +108,7 @@ def heartRateToMilli(heartRate):
     return 60000 / heartRate
 
 # row0Graph 712x178
-items = []
 lastX = 0;
-lastY = 89;
 
 # row1Graph 712x178
 items2 = []
@@ -122,22 +117,15 @@ heartRate = 48;
 timeBetweenBeats = heartRateToMilli(heartRate)
 
 def updateSimulation():
-    # Random Graph
     global lastX
-    global lastY
     nextX = lastX + 10
     if nextX > 712:
         nextX = 10
         lastX = 0
-    nextY = randint(20, 158)
-    items.append(row0Graph.create_line(lastX, lastY, nextX, nextY, fill="red"))
     lastX = nextX
-    lastY = nextY
 
-    row0Text.set(lastY)
-
-    if len(items) > 65:
-        row0Graph.delete(items.pop(0))
+    # random
+    randomGraph.update()
 
     # heart rate
     global lastBeat
