@@ -87,11 +87,12 @@ class GraphWave(GraphRow):
 
     def __init__(self, parentWidget, rowNum):
         GraphRow.__init__(self, parentWidget, rowNum)
-        self.graph.create_line(0, self.graphHeight/2, self.graphWidth, self.graphHeight/2, fill="gray")
+        self.graph.create_line(0, self.graphHeight / 2, self.graphWidth, self.graphHeight / 2, fill="gray")
+
     def update(self):
         xy = []
         for x in range(0, self.graphWidth):
-            y = 39 + int(self.amplitude + self.amplitude*math.sin(self.frequency*((float(x)/self.graphWidth)*(2*math.pi) + (self.speed*time()))))
+            y = 39 + int(self.amplitude + self.amplitude * math.sin(self.frequency * ((float(x) / self.graphWidth) * (2 * math.pi) + (self.speed * time()))))
             xy.append(x)
             xy.append(y)
 
