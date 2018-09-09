@@ -103,4 +103,4 @@ class GraphWave(GraphRow):
         moveToward = (self.frequency - randint(4, 8)) / 10.0
         self.frequency -= moveToward
 
-        self.value.set(int(self.frequency * 100))
+        self.value.set(int(self.frequency * 100) / 10.0)
