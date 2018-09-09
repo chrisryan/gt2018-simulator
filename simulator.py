@@ -23,12 +23,7 @@ randomGraph = Graph.GraphRandom(statsCollection, 0)
 heartRateGraph = Graph.GraphHeartRate(statsCollection, 1, 48)
 
 # Row 2
-row2Text = StringVar()
-row2TextLabel = Label(statsCollection, textvariable=row2Text, relief=RAISED, bd=10, width=4, height=2, bg="red", font=("Arial Bold", 50))
-row2TextLabel.grid(row=2, column=0);
-
-row2Graph = Canvas(statsCollection, relief=RAISED, width=712, height=178, bg="black")
-row2Graph.grid(row=2, column=1);
+waveGraph = Graph.GraphWave(statsCollection, 2)
 
 # Row 3
 row3Text = StringVar()
@@ -56,7 +51,6 @@ timeLabel.pack()
 
 
 titleText.set("SUBJECT: SMITH, JOHN")
-row2Text.set("12")
 row3Text.set("63")
 timeText.set("3:05 PM")
 
@@ -67,6 +61,9 @@ def updateSimulation():
 
     # heart rate
     heartRateGraph.update()
+
+    # wave
+    waveGraph.update()
 
     # Time box
     timeText.set(datetime.now().time())

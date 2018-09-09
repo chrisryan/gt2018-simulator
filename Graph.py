@@ -1,6 +1,7 @@
 from Tkinter import *
 from random import randint
 from time import time
+import math
 
 # help functions
 def getCurrentMilli():
@@ -77,3 +78,29 @@ class GraphHeartRate(GraphRow):
 
     def heartRateToMilli(self, heartRate):
         return 60000 / heartRate
+
+class GraphWave(GraphRow):
+    items = []
+    frequency = 6
+    amplitude = 50
+    speed = 1
+
+    def __init__(self, parentWidget, rowNum):
+        GraphRow.__init__(self, parentWidget, rowNum)
+        self.graph.create_line(0, self.graphHeight/2, self.graphWidth, self.graphHeight/2, fill="gray")
+    def update(self):
+        xy = []
+        for x in range(0, self.graphWidth):
+            y = 39 + int(self.amplitude + self.amplitude*math.sin(self.frequency*((float(x)/self.graphWidth)*(2*math.pi) + (self.speed*time()))))
+            xy.append(x)
+            xy.append(y)
+
+        self.items.append(self.graph.create_line(xy, fill="yellow"))
+
+        while len(self.items) > 1:
+            self.graph.delete(self.items.pop(0))
+
+        moveToward = (self.frequency - randint(4, 8)) / 10.0
+        self.frequency -= moveToward
+
+        self.value.set(int(self.frequency * 100))
