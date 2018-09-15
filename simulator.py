@@ -23,15 +23,10 @@ randomGraph = Graph.GraphRandom(statsCollection, 0)
 heartRateGraph = Graph.GraphHeartRate(statsCollection, 1, 48)
 
 # Row 2
-waveGraph = Graph.GraphWave(statsCollection, 2)
+bpGraph = Graph.GraphBloodpressure(statsCollection, 2, 48)
 
 # Row 3
-row3Text = StringVar()
-row3TextLabel = Label(statsCollection, textvariable=row3Text, relief=RAISED, bd=10, width=4, height=2, bg="pink", font=("Arial Bold", 50))
-row3TextLabel.grid(row=3, column=0);
-
-row3Graph = Canvas(statsCollection, relief=RAISED, width=712, height=178, bg="black")
-row3Graph.grid(row=3, column=1);
+waveGraph = Graph.GraphWave(statsCollection, 3)
 
 
 visualCollection = Frame(frame)
@@ -51,7 +46,6 @@ timeLabel.pack()
 
 
 titleText.set("SUBJECT: SMITH, JOHN")
-row3Text.set("63")
 timeText.set("3:05 PM")
 
 
@@ -62,6 +56,9 @@ def updateSimulation():
     # heart rate
     heartRateGraph.update()
 
+    # bp graph
+    bpGraph.update()
+    
     # wave
     waveGraph.update()
 

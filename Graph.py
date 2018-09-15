@@ -79,6 +79,53 @@ class GraphHeartRate(GraphRow):
     def heartRateToMilli(self, heartRate):
         return 60000 / heartRate
 
+class GraphBloodpressure(GraphRow):
+    lastX = 0
+    lastY = 100
+    baseY = 100
+    amplitude = 25
+    speed = 1.3
+    frequency = 0.11
+    items = []
+    def __init__(self, parentWidget, rowNum, heartRate):
+        GraphRow.__init__(self, parentWidget, rowNum)
+        self.setHeartRate(heartRate)
+        self.lastBeat = getCurrentMilli() + 400
+
+    def update(self):
+        currentMilli = getCurrentMilli()
+        deltaTime = currentMilli - self.lastBeat
+        falloff = (self.baseY - self.lastY) / (deltaTime / 120.0)
+        if deltaTime > self.timeBetweenBeats:
+            # start bp rise
+            xy = [self.lastX, self.lastY]
+            for x in range(1, 11):
+                y = int(self.amplitude * math.sin(self.frequency * ((float(x) / 10.0) * (2 * math.pi) + (self.speed * x))))
+                xy.append(self.lastX + x)
+                xy.append(self.baseY - y)
+                self.lastY = self.baseY - y
+            self.items.append(self.graph.create_line(xy, fill="red"))
+            self.lastBeat = currentMilli
+        else:
+            # fall off from last position
+            self.items.append(self.graph.create_line(self.lastX, self.lastY, self.lastX + 10, self.lastY + falloff, fill="red"))
+            self.lastY = self.lastY + falloff
+
+        self.lastX = self.lastX + 10
+        if self.lastX > self.graphWidth:
+            self.lastX = 10
+
+        while len(self.items) > 65:
+            self.graph.delete(self.items.pop(0))
+
+    def setHeartRate(self, heartRate):
+        self.heartRate = heartRate
+        self.value.set((heartRate * 3) - 20)
+        self.timeBetweenBeats = self.heartRateToMilli(heartRate)
+
+    def heartRateToMilli(self, heartRate):
+        return 60000 / heartRate
+
 class GraphWave(GraphRow):
     items = []
     frequency = 6
