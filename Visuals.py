@@ -18,6 +18,7 @@ class Visuals:
         self.loadImage("images/person_background.png", 0, 0)
 
         self.brain = BrainVisual(self)
+        self.heart = HeartVisual(self)
 
     def loadImage(self, filename, x, y):
         image = Image.open(filename)
@@ -27,6 +28,7 @@ class Visuals:
 
     def update(self):
         self.brain.update()
+        self.heart.update()
 
 class BrainVisual:
     brainSectors = []
@@ -51,3 +53,17 @@ class BrainVisual:
             self.visuals.visual.itemconfig(sector, state=HIDDEN)
         else:
             self.visuals.visual.itemconfig(sector, state=NORMAL)
+
+class HeartVisual:
+    tick = 0
+
+    def __init__(self, visuals):
+        self.visuals = visuals
+        visuals.loadImage("images/heart.png", 20, 240)
+        self.text = visuals.visual.create_text(130, 330, text="123", fill="yellow", font=("Arial Bold", 36))
+
+    def update(self):
+        self.tick = self.tick + 1
+        if self.tick >= 10:
+            self.tick = 0
+        self.visuals.visual.itemconfig(self.text, font=("Arial Bold", 40 - self.tick))
