@@ -19,6 +19,7 @@ class Visuals:
 
         self.brain = BrainVisual(self)
         self.heart = HeartVisual(self)
+        self.bar = BarVisual(self, 30, self.visualsHeight - 50)
 
     def loadImage(self, filename, x, y):
         image = Image.open(filename)
@@ -29,6 +30,7 @@ class Visuals:
     def update(self):
         self.brain.update()
         self.heart.update()
+        self.bar.update()
 
 class BrainVisual:
     brainSectors = []
@@ -67,3 +69,29 @@ class HeartVisual:
         if self.tick >= 10:
             self.tick = 0
         self.visuals.visual.itemconfig(self.text, font=("Arial Bold", 40 - self.tick))
+
+class BarVisual:
+    maxHeight = 150
+    width = 30
+    tick = 0
+    tickReset = 10
+    goal = 60
+
+    def __init__(self, visuals, x, y):
+        self.visuals = visuals
+
+        self.bar = visuals.visual.create_rectangle(x, y, x + self.width, y - self.maxHeight, fill="cyan")
+
+    def update(self):
+        x0, y0, x1, y1 = self.visuals.visual.coords(self.bar)
+        delta = randint(0, 5)
+        if (y1 - y0) > self.goal:
+            delta = delta * -1;
+        self.visuals.visual.coords(self.bar, x0, y0 - delta, x1, y1)
+
+        self.tick = self.tick + 1;
+        if self.tick > self.tickReset:
+            self.tick = 0
+            self.tickReset = randint(5, 15)
+
+            self.goal = randint(0, self.maxHeight)
