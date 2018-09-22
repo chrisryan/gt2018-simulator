@@ -19,7 +19,7 @@ class Visuals:
 
         self.brain = BrainVisual(self)
         self.heart = HeartVisual(self)
-        self.bar = BarVisual(self, 30, self.visualsHeight - 50)
+        self.bars = BarGroupVisual(self, self.visualsHeight - 50)
 
     def loadImage(self, filename, x, y):
         image = Image.open(filename)
@@ -30,7 +30,7 @@ class Visuals:
     def update(self):
         self.brain.update()
         self.heart.update()
-        self.bar.update()
+        self.bars.update()
 
 class BrainVisual:
     brainSectors = []
@@ -69,6 +69,20 @@ class HeartVisual:
         if self.tick >= 10:
             self.tick = 0
         self.visuals.visual.itemconfig(self.text, font=("Arial Bold", 40 - self.tick))
+
+class BarGroupVisual:
+    bars = []
+
+    def __init__(self, visuals, baseY):
+        self.bars.append(BarVisual(visuals, 20, baseY))
+        self.bars.append(BarVisual(visuals, 70, baseY))
+        self.bars.append(BarVisual(visuals, 120, baseY))
+        self.bars.append(BarVisual(visuals, 170, baseY))
+        self.bars.append(BarVisual(visuals, 220, baseY))
+
+    def update(self):
+        for bar in self.bars:
+            bar.update()
 
 class BarVisual:
     maxHeight = 150
