@@ -2,6 +2,9 @@ from Tkinter import *
 from datetime import datetime
 import Graph
 import Visuals
+import Body
+
+heart = Body.Heart()
 
 main = Tk()
 
@@ -21,16 +24,16 @@ statsCollection.pack(side=LEFT)
 randomGraph = Graph.GraphRandom(statsCollection, 0)
 
 # Row 1
-heartRateGraph = Graph.GraphHeartRate(statsCollection, 1, 48)
+heartRateGraph = Graph.GraphHeartRate(statsCollection, 1, heart)
 
 # Row 2
-bpGraph = Graph.GraphBloodpressure(statsCollection, 2, 48)
+bpGraph = Graph.GraphBloodpressure(statsCollection, 2, heart)
 
 # Row 3
 waveGraph = Graph.GraphWave(statsCollection, 3)
 
 # Visuals
-visualsCollection = Visuals.Visuals(frame)
+visualsCollection = Visuals.Visuals(frame, heart)
 
 # Bottom
 bottom = Frame(main)
@@ -45,6 +48,9 @@ titleText.set("SUBJECT: SMITH, JOHN")
 timeText.set("3:05 PM")
 
 def updateSimulation():
+    # heart
+    heart.update()
+
     # random
     randomGraph.update()
 

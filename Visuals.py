@@ -8,7 +8,7 @@ class Visuals:
     visualsHeight = 712
     sourceImages = []
 
-    def __init__(self, parentWidget):
+    def __init__(self, parentWidget, heart):
         visualCollection = Frame(parentWidget)
         visualCollection.pack(side=LEFT)
 
@@ -18,7 +18,7 @@ class Visuals:
         self.loadImage("images/person_background.png", 0, 0)
 
         self.brain = BrainVisual(self)
-        self.heart = HeartVisual(self)
+        self.heart = HeartVisual(self, heart)
         self.bars = BarGroupVisual(self, self.visualsHeight - 50)
         self.circles = CircleGroupVisual(self)
 
@@ -61,12 +61,14 @@ class BrainVisual:
 class HeartVisual:
     tick = 0
 
-    def __init__(self, visuals):
+    def __init__(self, visuals, heart):
         self.visuals = visuals
+        self.heart = heart
         visuals.loadImage("images/heart.png", 20, 240)
         self.text = visuals.visual.create_text(130, 330, text="123", fill="yellow", font=("Arial Bold", 36))
 
     def update(self):
+        self.visuals.visual.itemconfig(self.text, text=self.heart.getHeartRate())
         self.tick = self.tick + 1
         if self.tick >= 10:
             self.tick = 0
