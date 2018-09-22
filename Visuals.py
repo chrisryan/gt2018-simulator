@@ -20,7 +20,7 @@ class Visuals:
         self.brain = BrainVisual(self)
         self.heart = HeartVisual(self)
         self.bars = BarGroupVisual(self, self.visualsHeight - 50)
-        self.circle = CircleVisual(self, 345, 5)
+        self.circles = CircleGroupVisual(self)
 
     def loadImage(self, filename, x, y):
         image = Image.open(filename)
@@ -32,7 +32,7 @@ class Visuals:
         self.brain.update()
         self.heart.update()
         self.bars.update()
-        self.circle.update()
+        self.circles.update()
 
 class BrainVisual:
     brainSectors = []
@@ -111,6 +111,24 @@ class BarVisual:
             self.tickReset = randint(5, 15)
 
             self.goal = randint(0, self.maxHeight)
+
+class CircleGroupVisual:
+    circles = []
+
+    def __init__(self, visuals):
+        self.circles.append(CircleVisual(visuals, 345, 5))
+        self.circles.append(CircleVisual(visuals, 295, 30))
+        self.circles.append(CircleVisual(visuals, 295, 80))
+        self.circles.append(CircleVisual(visuals, 395, 30))
+        self.circles.append(CircleVisual(visuals, 395, 80))
+        self.circles.append(CircleVisual(visuals, 245, 340))
+        self.circles.append(CircleVisual(visuals, 440, 340))
+        self.circles.append(CircleVisual(visuals, 280, 625))
+        self.circles.append(CircleVisual(visuals, 405, 625))
+
+    def update(self):
+        for circle in self.circles:
+            circle.update()
 
 class CircleVisual:
     diameter = 20
