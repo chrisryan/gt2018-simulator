@@ -20,6 +20,7 @@ class Visuals:
         self.brain = BrainVisual(self)
         self.heart = HeartVisual(self)
         self.bars = BarGroupVisual(self, self.visualsHeight - 50)
+        self.circle = CircleVisual(self, 345, 5)
 
     def loadImage(self, filename, x, y):
         image = Image.open(filename)
@@ -31,6 +32,7 @@ class Visuals:
         self.brain.update()
         self.heart.update()
         self.bars.update()
+        self.circle.update()
 
 class BrainVisual:
     brainSectors = []
@@ -109,3 +111,23 @@ class BarVisual:
             self.tickReset = randint(5, 15)
 
             self.goal = randint(0, self.maxHeight)
+
+class CircleVisual:
+    diameter = 20
+    tick = 1
+    filled = FALSE
+
+    def __init__(self, visuals, x, y):
+        self.visuals = visuals
+
+        self.circle = visuals.visual.create_oval(x, y, x + self.diameter, y + self.diameter, outline="cyan", width=2)
+
+    def update(self):
+        self.tick = self.tick - 1
+        if self.tick < 1:
+            self.tick = randint(1, 10)
+            color = ""
+            self.filled = not self.filled
+            if self.filled:
+                color = "cyan"
+            self.visuals.visual.itemconfig(self.circle, fill=color)
