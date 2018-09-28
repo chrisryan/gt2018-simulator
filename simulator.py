@@ -1,4 +1,5 @@
 from Tkinter import *
+from tkSimpleDialog import *
 from datetime import datetime
 import Graph
 import Visuals
@@ -8,8 +9,26 @@ heart = Body.Heart()
 
 main = Tk()
 
-# Title
 titleText = StringVar()
+
+def updateName():
+    newName = askstring("Input", "Patient Name:", parent=main)
+
+    if newName is not None:
+        titleText.set("SUBJECT: " + newName)
+
+# Menu
+menubar = Menu(main)
+
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Name", command=updateName)
+filemenu.add_separator()
+filemenu.add_command(label="Exit", command=main.quit)
+menubar.add_cascade(label="File", menu=filemenu)
+
+main.config(menu=menubar)
+
+# Title
 title = Label(main, textvariable=titleText, relief=RAISED, justify=LEFT, font=("Arial Bold", 18))
 title.pack(fill="x", side=TOP)
 
