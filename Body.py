@@ -9,6 +9,9 @@ class Heart:
     heartRate = 48
     isOnBeat = False
     isPostBeat = False
+    isRandom = False
+    randLow = 47
+    randHigh = 49
     def __init__(self):
         self.lastBeat = getCurrentMilli()
         self.setHeartRate(self.heartRate)
@@ -26,6 +29,17 @@ class Heart:
         if self.deltaTime > self.timeBetweenBeats:
             self.isOnBeat = True
             self.lastBeat = currentMilli
+
+            if self.isRandom and randint(1, 6) == 1:
+                adjust = randint(-1, 1)
+
+                if self.heartRate > self.randHigh:
+                    adjust = -1
+
+                if self.heartRate < self.randLow:
+                    adjust = 1
+
+                self.setHeartRate(self.heartRate + adjust)
 
     def onBeat(self):
         return self.isOnBeat
@@ -45,3 +59,13 @@ class Heart:
 
     def heartRateToMilli(self, heartRate):
         return 60000 / heartRate
+
+    def setRandomRange(self, low, high):
+        self.randLow = low
+        self.randHigh = high
+
+    def enableRandom(self, enable=True):
+        self.isRandom = enable
+
+    def getRandom(self):
+        return self.isRandom

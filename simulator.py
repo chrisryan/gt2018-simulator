@@ -6,6 +6,7 @@ import Visuals
 import Body
 
 heart = Body.Heart()
+heart.enableRandom(True)
 
 main = Tk()
 
@@ -22,13 +23,18 @@ def updateHeartRate():
 
     if newRate is not None:
         heart.setHeartRate(newRate)
+        heart.setRandomRange(newRate - 2, newRate + 2)
 
+def toggleHeartRate():
+    heart.enableRandom(not heart.getRandom())
+    
 # Menu
 menubar = Menu(main)
 
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Name", command=updateName)
 filemenu.add_command(label="Heart Rate", command=updateHeartRate)
+filemenu.add_command(label="Toggle Random Rate", command=toggleHeartRate)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=main.quit)
 menubar.add_cascade(label="File", menu=filemenu)
