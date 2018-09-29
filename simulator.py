@@ -17,11 +17,18 @@ def updateName():
     if newName is not None:
         titleText.set("SUBJECT: " + newName)
 
+def updateHeartRate():
+    newRate = askinteger("Input", "Heart Rate:", parent=main)
+
+    if newRate is not None:
+        heart.setHeartRate(newRate)
+
 # Menu
 menubar = Menu(main)
 
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Name", command=updateName)
+filemenu.add_command(label="Heart Rate", command=updateHeartRate)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=main.quit)
 menubar.add_cascade(label="File", menu=filemenu)
