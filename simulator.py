@@ -1,5 +1,6 @@
 from Tkinter import *
 from tkSimpleDialog import *
+from PIL import Image, ImageTk
 from datetime import datetime
 import Graph
 import Visuals
@@ -9,6 +10,9 @@ heart = Body.Heart()
 heart.enableRandom(True)
 
 main = Tk()
+
+wImage = Image.open("images/warning.png")
+wImageP = ImageTk.PhotoImage(wImage)
 
 titleText = StringVar()
 
@@ -27,7 +31,29 @@ def updateHeartRate():
 
 def toggleHeartRate():
     heart.enableRandom(not heart.getRandom())
+
+def showAlert():
+    warningW = Toplevel()
+    warningW.title("Critical Alert")
+    warningL = Label(warningW, image=wImageP)
+    warningL.pack()
+
+    main.update()
+
+    m = re.match("(\d+)x(\d+).?([-+]\d+)([-+]\d+)", main.geometry())
+    m = map(int, m.groups())
+
+    x = m[0] / 2 + m[2];
+    y = m[1] / 2 + m[3];
+
+    w = re.match("(\d+)x(\d+).?([-+]\d+)([-+]\d+)", warningW.geometry())
+    w = map(int, w.groups())
     
+    size = (w[0], w[1])
+    x = x - size[0] / 2
+    y = y - size[1] / 2
+    warningW.geometry("%dx%d+%d+%d" % (size + (x, y)))
+
 # Menu
 menubar = Menu(main)
 
@@ -38,6 +64,10 @@ filemenu.add_command(label="Toggle Random Rate", command=toggleHeartRate)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=main.quit)
 menubar.add_cascade(label="File", menu=filemenu)
+
+windowmenu = Menu(menubar, tearoff=0)
+windowmenu.add_command(label="Alert", command=showAlert)
+menubar.add_cascade(label="Windows", menu=windowmenu)
 
 main.config(menu=menubar)
 
