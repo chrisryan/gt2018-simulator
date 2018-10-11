@@ -48,11 +48,14 @@ def showAlert():
 
     w = re.match("(\d+)x(\d+).?([-+]\d+)([-+]\d+)", warningW.geometry())
     w = map(int, w.groups())
-    
+
     size = (w[0], w[1])
     x = x - size[0] / 2
     y = y - size[1] / 2
     warningW.geometry("%dx%d+%d+%d" % (size + (x, y)))
+
+def delayedAlert():
+    main.after(10000, showAlert)
 
 # Menu
 menubar = Menu(main)
@@ -101,9 +104,13 @@ visualsCollection = Visuals.Visuals(frame, heart)
 bottom = Frame(main)
 bottom.pack(side=TOP)
 
+startButton = Button(bottom, text="Start Simulation", command=delayedAlert)
+startButton.pack(side=LEFT)
+
 timeText = StringVar()
 timeLabel = Label(bottom, textvariable=timeText, font=("Arial Bold", 36))
-timeLabel.pack()
+timeLabel.pack(side=LEFT)
+
 
 
 titleText.set("SUBJECT: SMITH, JOHN")
