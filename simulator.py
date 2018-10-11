@@ -8,6 +8,7 @@ import Body
 
 heart = Body.Heart()
 heart.enableRandom(True)
+alertDelay = 10000
 
 main = Tk()
 
@@ -54,8 +55,18 @@ def showAlert():
     y = y - size[1] / 2
     warningW.geometry("%dx%d+%d+%d" % (size + (x, y)))
 
+def updateAlertDelay():
+    global alertDelay;
+
+    newDelay = askinteger("Input", "Alert Delay (Seconds):", parent=main)
+
+    if newDelay is not None:
+        alertDelay = newDelay * 1000;
+
 def delayedAlert():
-    main.after(10000, showAlert)
+    global alertDelay;
+
+    main.after(alertDelay, showAlert)
 
 # Menu
 menubar = Menu(main)
@@ -70,6 +81,7 @@ menubar.add_cascade(label="File", menu=filemenu)
 
 windowmenu = Menu(menubar, tearoff=0)
 windowmenu.add_command(label="Alert", command=showAlert)
+windowmenu.add_command(label="Alert Delay", command=updateAlertDelay)
 menubar.add_cascade(label="Windows", menu=windowmenu)
 
 main.config(menu=menubar)
