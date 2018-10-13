@@ -87,7 +87,7 @@ menubar.add_cascade(label="Windows", menu=windowmenu)
 main.config(menu=menubar)
 
 # Title
-title = Label(main, textvariable=titleText, relief=RAISED, justify=LEFT, font=("Arial Bold", 18))
+title = Label(main, textvariable=titleText, relief=RAISED, justify=LEFT, font=("Arial Bold", 24))
 title.pack(fill="x", side=TOP)
 
 # Center
@@ -120,7 +120,7 @@ startButton = Button(bottom, text="Start Simulation", command=delayedAlert)
 startButton.pack(side=LEFT)
 
 timeText = StringVar()
-timeLabel = Label(bottom, textvariable=timeText, font=("Arial Bold", 36))
+timeLabel = Label(bottom, textvariable=timeText, font=("Arial Bold", 24))
 timeLabel.pack(side=LEFT)
 
 
